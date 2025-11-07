@@ -1,0 +1,23 @@
+
+### Practice Questions:
+
+1. Count the total number of patients in the hospital.
+select count(*) as total from patients;
+
+2. Calculate the average satisfaction score of all patients.
+select avg(satisfaction) as  Avg_satisfaction from patients; 
+
+3. Find the minimum and maximum age of patients.
+select max(age) as Max_Age , min(age) as Min_Age from patients;
+
+### Daily Challenge:
+
+**Question:** Calculate the total number of patients admitted, total patients refused, and the average patient satisfaction across all services and weeks. Round the average satisfaction to 2 decimal places.
+
+SELECT
+    COUNT(patient_id) AS Total_Patients,
+    SUM(CASE WHEN departure_date IS NOT NULL THEN 1 ELSE 0 END) AS Total_Admitted,
+    SUM(CASE WHEN departure_date IS NULL THEN 1 ELSE 0 END) AS Total_Refused,
+    ROUND(AVG(satisfaction), 2) AS Avg_Satisfaction
+FROM patients;
+
