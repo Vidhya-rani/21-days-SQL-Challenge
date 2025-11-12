@@ -1,0 +1,55 @@
+# practice
+ #  Extract the year from all patient arrival dates.
+ select * from patients;
+ select patient_id, year(arrival_date) as arrival_year from patients;
+ 
+#  Calculate the length of stay for each patient (departure_date - arrival_date).
+select patient_id,arrival_date,departure_date, datediff(arrival_date,departure_date) from patients;
+
+# Find all patients who arrived in a specific month.
+select patient_id,arrival_date from patients where month(arrival_date)=12;
+
+### Daily Challenge:
+
+#Question:** Calculate the average length of stay (in days) for each service, showing only services where the average stay is more than 7 days. Also show the count of patients and order by average stay descending.
+
+INSERT INTO patients (patient_id, name, age, arrival_date, departure_date, service)
+VALUES
+('PAT-999003', 'Rohit Singh', 38, '2025-02-01', '2025-02-10', 'ICU'),
+('PAT-999004', 'Anita Desai', 52, '2025-03-05', '2025-03-15', 'general_medicine'),
+('PAT-999005', 'Vijay Kumar', 60, '2025-04-10', '2025-04-20', 'cardiology'),
+('PAT-999006', 'Meera Patel', 29, '2025-05-01', '2025-05-09', 'orthopedics'),
+('PAT-999007', 'Aditya Rao', 45, '2025-06-02', '2025-06-12', 'ICU'),
+('PAT-999008', 'Karan Shah', 33, '2025-07-08', '2025-07-18', 'general_medicine');
+
+SELECT 
+    service,
+    AVG(DATEDIFF(departure_date, arrival_date)) AS avg_stay,
+    COUNT(*) AS patient_count
+FROM patients
+GROUP BY service
+HAVING AVG(DATEDIFF(departure_date, arrival_date)) > 7
+ORDER BY avg_stay DESC;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
