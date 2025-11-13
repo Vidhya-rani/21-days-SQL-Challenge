@@ -1,5 +1,10 @@
-1️⃣ Categorise patients as 'High', 'Medium', or 'Low' satisfaction.
-✔ Answer
+Day 10 – CASE Statements & Conditional Categorization
+📌 Overview
+On Day 10, I practiced how to use CASE expressions in SQL to categorize data, classify staff, create age groups, and build a performance report combining CASE + aggregates.
+
+🧩 Practice Questions & Answers
+
+1️⃣ Categorise patients as 'High', 'Medium', or 'Low' satisfaction
 SELECT 
     patient_id,
     satisfaction,
@@ -10,8 +15,8 @@ SELECT
     END AS satisfaction_category
 FROM patients;
 
-2️⃣ Label staff roles as 'Medical' or 'Support'.
-✔ Answer
+
+2️⃣ Label staff roles as 'Medical' or 'Support'
 SELECT 
     staff_id,
     role,
@@ -21,8 +26,8 @@ SELECT
     END AS role_category
 FROM staff;
 
-3️⃣ Create age groups for patients (0–18, 19–40, 41–65, 65+).
-✔ Answer
+
+3️⃣ Create age groups for patients (0–18, 19–40, 41–65, 65+)
 SELECT 
     patient_id,
     age,
@@ -34,7 +39,25 @@ SELECT
     END AS age_group
 FROM patients;
 
-4️⃣ Daily Challenge – Service Performance Report
+
+🎯 Daily Challenge – Service Performance Report
+Question:
+Create a service performance report showing service name, total patients, average satisfaction, and a performance category based on:
+
+
+Excellent → avg ≥ 85
+
+
+Good → avg ≥ 75
+
+
+Fair → avg ≥ 65
+
+
+Needs Improvement → else
+
+
+Sort results by average satisfaction (DESC).
 ✔ Answer
 SELECT 
     s.service,
@@ -51,3 +74,18 @@ JOIN services_weekly s
     ON p.service = s.service
 GROUP BY s.service
 ORDER BY avg_satisfaction DESC;
+
+
+📘 Summary of Learnings
+
+
+Using CASE for conditional logic
+
+
+Creating categorized columns
+
+
+Combining CASE with aggregate functions
+
+
+Building service-level analytics reports
