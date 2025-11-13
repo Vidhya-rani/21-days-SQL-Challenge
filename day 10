@@ -1,0 +1,53 @@
+1️⃣ Categorise patients as 'High', 'Medium', or 'Low' satisfaction.
+✔ Answer
+SELECT 
+    patient_id,
+    satisfaction,
+    CASE
+        WHEN satisfaction >= 85 THEN 'High'
+        WHEN satisfaction >= 70 THEN 'Medium'
+        ELSE 'Low'
+    END AS satisfaction_category
+FROM patients;
+
+2️⃣ Label staff roles as 'Medical' or 'Support'.
+✔ Answer
+SELECT 
+    staff_id,
+    role,
+    CASE
+        WHEN role IN ('Doctor', 'Nurse', 'Surgeon', 'Therapist') THEN 'Medical'
+        ELSE 'Support'
+    END AS role_category
+FROM staff;
+
+3️⃣ Create age groups for patients (0–18, 19–40, 41–65, 65+).
+✔ Answer
+SELECT 
+    patient_id,
+    age,
+    CASE
+        WHEN age BETWEEN 0 AND 18 THEN '0-18 (Child)'
+        WHEN age BETWEEN 19 AND 40 THEN '19-40 (Young Adult)'
+        WHEN age BETWEEN 41 AND 65 THEN '41-65 (Middle Age)'
+        ELSE '65+ (Senior)'
+    END AS age_group
+FROM patients;
+
+4️⃣ Daily Challenge – Service Performance Report
+✔ Answer
+SELECT 
+    s.service,
+    COUNT(p.patient_id) AS total_patients,
+    ROUND(AVG(p.satisfaction), 2) AS avg_satisfaction,
+    CASE
+        WHEN AVG(p.satisfaction) >= 85 THEN 'Excellent'
+        WHEN AVG(p.satisfaction) >= 75 THEN 'Good'
+        WHEN AVG(p.satisfaction) >= 65 THEN 'Fair'
+        ELSE 'Needs Improvement'
+    END AS performance_category
+FROM patients p
+JOIN services_weekly s 
+    ON p.service = s.service
+GROUP BY s.service
+ORDER BY avg_satisfaction DESC;
