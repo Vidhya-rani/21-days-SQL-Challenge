@@ -1,0 +1,43 @@
+Today, I worked on removing duplicates, cleaning event records, and summarizing data to understand service-wise activity — essential skills for building accurate dashboards and performing reliable analytics.
+
+💡 𝐖𝐡𝐚𝐭 𝐈 𝐋𝐞𝐚𝐫𝐧𝐞𝐝 𝐓𝐨𝐝𝐚𝐲
+
+🔹 DISTINCT() → remove duplicate values
+🔹 GROUP BY → summarize information
+🔹 Filtering NULL/None → clean data
+🔹 Counting combinations → identify patterns
+🔹 ORDER BY DESC → find highest impact items
+
+✅ 𝐓𝐨𝐝𝐚𝐲’𝐬 𝐎𝐮𝐭𝐜𝐨𝐦𝐞
+
+✅ Retrieved unique services
+✅ Identified unique staff roles
+✅ Extracted distinct months
+✅ Analyzed service-event combinations
+✅ Filtered non-null & meaningful event data
+
+🧩 𝐏𝐫𝐚𝐜𝐭𝐢𝐜𝐞 𝐐𝐮𝐞𝐬𝐭𝐢𝐨𝐧𝐬
+1️⃣ 𝐋𝐢𝐬𝐭 𝐚𝐥𝐥 𝐮𝐧𝐢𝐪𝐮𝐞 𝐬𝐞𝐫𝐯𝐢𝐜𝐞𝐬 𝐢𝐧 𝐭𝐡𝐞 𝐩𝐚𝐭𝐢𝐞𝐧𝐭𝐬 𝐭𝐚𝐛𝐥𝐞.
+SELECT DISTINCT service FROM patients;
+
+2️⃣ 𝐅𝐢𝐧𝐝 𝐚𝐥𝐥 𝐮𝐧𝐢𝐪𝐮𝐞 𝐬𝐭𝐚𝐟𝐟 𝐫𝐨𝐥𝐞𝐬 𝐢𝐧 𝐭𝐡𝐞 𝐡𝐨𝐬𝐩𝐢𝐭𝐚𝐥.
+SELECT DISTINCT role FROM staff;
+
+3️⃣ 𝐆𝐞𝐭 𝐝𝐢𝐬𝐭𝐢𝐧𝐜𝐭 𝐦𝐨𝐧𝐭𝐡𝐬 𝐟𝐫𝐨𝐦 𝐭𝐡𝐞 𝐬𝐞𝐫𝐯𝐢𝐜𝐞𝐬_𝐰𝐞𝐞𝐤𝐥𝐲 𝐭𝐚𝐛𝐥𝐞.
+SELECT DISTINCT month FROM services_weekly;
+
+🎯 𝐃𝐚𝐢𝐥𝐲 𝐂𝐡𝐚𝐥𝐥𝐞𝐧𝐠𝐞
+𝐅𝐢𝐧𝐝 𝐚𝐥𝐥 𝐮𝐧𝐢𝐪𝐮𝐞 𝐜𝐨𝐦𝐛𝐢𝐧𝐚𝐭𝐢𝐨𝐧𝐬 𝐨𝐟 𝐬𝐞𝐫𝐯𝐢𝐜𝐞 𝐚𝐧𝐝 𝐞𝐯𝐞𝐧𝐭 (𝐞𝐱𝐜𝐞𝐩𝐭 NULL/None) 𝐚𝐧𝐝 𝐜𝐨𝐮𝐧𝐭 𝐡𝐨𝐰 𝐨𝐟𝐭𝐞𝐧 𝐞𝐚𝐜𝐡 𝐜𝐨𝐦𝐛𝐢𝐧𝐚𝐭𝐢𝐨𝐧 𝐨𝐜𝐜𝐮𝐫𝐬. 𝐎𝐫𝐝𝐞𝐫 𝐛𝐲 𝐭𝐡𝐞 𝐡𝐢𝐠𝐡𝐞𝐬𝐭 𝐨𝐜𝐜𝐮𝐫𝐫𝐞𝐧𝐜𝐞.
+SELECT 
+    service,
+    event,
+    COUNT(*) AS total_occurrences
+FROM services_weekly
+WHERE event IS NOT NULL 
+  AND event <> 'None'
+GROUP BY service, event
+ORDER BY total_occurrences DESC;
+
+✅ Insight
+
+This helps identify which service–event patterns occur most frequently, supporting better decision-making, resource allocation, and workflow monitoring in a hospital environment.
