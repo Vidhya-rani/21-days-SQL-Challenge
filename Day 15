@@ -1,0 +1,115 @@
+Day 15 – Multi-Table JOINs (Patients × Staff × Services Weekly)
+21 Days SQL Challenge – Indian Data Club
+Overview
+
+In Day 15, the goal was to understand how to perform multi-table joins between:
+
+patients
+
+staff
+
+services_weekly
+
+Since staff_schedule does not exist in this dataset, all reports were built using the available schema.
+
+This day focuses on understanding how multiple tables can be connected to produce analytical reports—a key skill in SQL-based data analytics.
+
+Topics Covered
+
+INNER JOIN vs LEFT JOIN usage
+
+Mapping patients to staff based on service
+
+Creating multi-table hospital analytics
+
+Aggregation using COUNT(), GROUP BY
+
+Handling missing data gracefully
+
+Practice Questions & Solutions
+1. Join patients with staff to display the staff handling each service
+SELECT 
+    p.patient_id,
+    p.name AS patient_name,
+    p.service AS patient_service,
+    s.staff_name,
+    s.role
+FROM patients p
+JOIN staff s 
+      ON p.service = s.service;
+
+2. Combine services_weekly with staff to show staff assignment counts
+SELECT 
+    sw.week,
+    sw.service,
+    sw.patients_admitted,
+    sw.patients_refused,
+    COUNT(s.staff_id) AS staff_assigned
+FROM services_weekly sw
+LEFT JOIN staff s 
+       ON sw.service = s.service
+GROUP BY 
+    sw.week, sw.service, 
+    sw.patients_admitted, sw.patients_refused;
+
+3. Generate a full hospital operations report (patients + weekly data + staff)
+SELECT 
+    p.patient_id,
+    p.name AS patient_name,
+    p.service,
+    sw.week,
+    sw.patients_admitted,
+    sw.patients_refused,
+    s.staff_name,
+    s.role
+FROM patients p
+LEFT JOIN services_weekly sw 
+       ON p.service = sw.service
+LEFT JOIN staff s
+       ON p.service = s.service
+ORDER BY sw.week, p.service;
+
+Daily Challenge
+Service Analysis Report for Week 20
+
+Required output:
+
+service name
+
+total patients admitted
+
+total patients refused
+
+average patient satisfaction
+
+staff assigned count
+
+staff present (NULL because no staff_schedule table)
+
+SELECT 
+    sw.service,
+    sw.patients_admitted AS total_patients_admitted,
+    sw.patients_refused AS total_patients_refused,
+    sw.patient_satisfaction AS avg_patient_satisfaction,
+    COUNT(s.staff_id) AS staff_assigned,
+    NULL AS staff_present
+FROM services_weekly sw
+LEFT JOIN staff s 
+       ON sw.service = s.service
+WHERE sw.week = 20
+GROUP BY 
+    sw.service,
+    sw.patients_admitted,
+    sw.patients_refused,
+    sw.patient_satisfaction
+ORDER BY total_patients_admitted DESC;
+
+Outcome
+
+Learned how to join multiple tables effectively
+
+Built real-world hospital analytics queries
+
+Worked with NULL-safe joins
+
+Created aggregated reports for performance insights
