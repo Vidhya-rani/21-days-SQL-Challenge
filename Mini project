@@ -1,0 +1,56 @@
+🍕 The Great Pizza Analytics Challenge – SQL Project
+📌 Project Overview
+
+This project is part of the Great Pizza Analytics Challenge, where I acted as a Data Analyst for IDC Pizza and analyzed raw pizza sales data using SQL to generate meaningful business insights.
+
+The goal was to practice real-world data analysis concepts and strengthen SQL skills through hands-on queries.
+
+🛠️ Skills & Concepts Used
+
+Database creation & table design
+
+Data filtering using WHERE, IN, BETWEEN, LIKE, AND / OR / NOT
+
+Aggregations using SUM, AVG, COUNT, MIN, MAX
+
+Grouping using GROUP BY and filtering with HAVING
+
+Joins: INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL OUTER JOIN, SELF JOIN
+
+Data cleaning using DISTINCT, COALESCE, and handling NULL values
+
+📊 Project Tasks
+
+Some key analyses performed in this project:
+
+Identified unique pizza categories
+
+Handled missing values in ingredients
+
+Filtered pizzas by size, price, and name
+
+Calculated total sales and revenue per order
+
+Found top-selling categories
+
+Identified pizzas that were never ordered
+
+Compared price differences across pizza sizes
+
+🚀 What I Learned
+
+Writing efficient SQL queries
+
+Data cleaning and transformation
+
+Business-focused data analysis
+
+Query optimization and performance thinking
+
+📂 Technologies Used
+
+SQL
+
+MySQL / PostgreSQL (mention what you used)
+
+Git & GitHub
