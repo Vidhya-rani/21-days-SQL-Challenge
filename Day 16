@@ -1,60 +1,83 @@
-✴️ 𝐃𝐚𝐲 𝟏𝟑 𝐨𝐟 𝟐𝟏 𝐃𝐚𝐲𝐬 𝐨𝐟 𝐒𝐐𝐋 — 𝐉𝐎𝐈𝐍𝐒, 𝐑𝐞𝐩𝐨𝐫𝐭𝐬 & 𝐑𝐞𝐥𝐚𝐭𝐢𝐨𝐧𝐬
+✴️ 𝐃𝐚𝐲 𝟏𝟔 𝐨𝐟 𝟐𝟏 𝐃𝐚𝐲𝐬 𝐨𝐟 𝐒𝐐𝐋 — 𝐒𝐮𝐛𝐪𝐮𝐞𝐫𝐢𝐞𝐬 & 𝐀𝐠𝐠𝐫𝐞𝐠𝐚𝐭𝐞𝐬
 by Indian Data Club | Sponsored by DPDzero
+
 Continuing my SQL journey 💪
- Today I focused on JOIN operations, connecting tables like patients, staff, and services_weekly to build real-world reports.
+Today I focused on using subqueries and aggregations to build deeper analytical insights across healthcare datasets.
 
 💡 𝐖𝐡𝐚𝐭 𝐈 𝐋𝐞𝐚𝐫𝐧𝐞𝐝
-🔹 INNER JOIN fundamentals
- 🔹 Relational table mapping
- 🔹 Weekly service + staff reports
- 🔹 GROUP BY + HAVING for filters
- 🔹 ORDER BY based on logic requirements
+🔹 Writing nested subqueries
+🔹 Using AVG, SUM, COUNT effectively
+🔹 Filtering data using HAVING clauses
+🔹 Comparing service-level metrics
+🔹 Building logic-driven reports
 
 🧩 𝐏𝐫𝐚𝐜𝐭𝐢𝐜𝐞 𝐐𝐮𝐞𝐬𝐭𝐢𝐨𝐧𝐬 & 𝐒𝐨𝐥𝐮𝐭𝐢𝐨𝐧𝐬
-1️⃣ 𝐉𝐨𝐢𝐧 𝐩𝐚𝐭𝐢𝐞𝐧𝐭𝐬 𝐚𝐧𝐝 𝐬𝐭𝐚𝐟𝐟 𝐛𝐚𝐬𝐞𝐝 𝐨𝐧 𝐭𝐡𝐞𝐢𝐫 𝐜𝐨𝐦𝐦𝐨𝐧 𝐬𝐞𝐫𝐯𝐢𝐜𝐞
-SELECT p.name, p.age, s.staff_name, s.role
-FROM patients p 
-INNER JOIN staff s 
-ON p.service = s.service;
 
-2️⃣ 𝐉𝐨𝐢𝐧 services_weekly 𝐰𝐢𝐭𝐡 𝐬𝐭𝐚𝐟𝐟 𝐭𝐨 𝐬𝐡𝐨𝐰 𝐰𝐞𝐞𝐤𝐥𝐲 𝐬𝐞𝐫𝐯𝐢𝐜𝐞 𝐢𝐧𝐬𝐢𝐠𝐡𝐭𝐬
-SELECT st.staff_name, st.role, sw.week, sw.staff_morale
-FROM staff st
-INNER JOIN services_weekly sw
-ON st.service = sw.service;
+1️⃣ 𝐅𝐢𝐧𝐝 𝐩𝐚𝐭𝐢𝐞𝐧𝐭𝐬 𝐰𝐡𝐨 𝐚𝐫𝐞 𝐢𝐧 𝐬𝐞𝐫𝐯𝐢𝐜𝐞𝐬 𝐰𝐢𝐭𝐡 𝐚𝐛𝐨𝐯𝐞-𝐚𝐯𝐞𝐫𝐚𝐠𝐞 𝐬𝐭𝐚𝐟𝐟 𝐜𝐨𝐮𝐧𝐭
 
-3️⃣ 𝐂𝐫𝐞𝐚𝐭𝐞 𝐚 𝐫𝐞𝐩𝐨𝐫𝐭 𝐬𝐡𝐨𝐰𝐢𝐧𝐠 𝐩𝐚𝐭𝐢𝐞𝐧𝐭 𝐢𝐧𝐟𝐨 + 𝐬𝐭𝐚𝐟𝐟 𝐚𝐬𝐬𝐢𝐠𝐧𝐞𝐝 𝐭𝐨 𝐭𝐡𝐞𝐢𝐫 𝐬𝐞𝐫𝐯𝐢𝐜𝐞
-SELECT p.name, p.age, s.staff_name, s.role
+SELECT p.patient_id, p.name, p.service
 FROM patients p
-INNER JOIN staff s
-ON p.service = s.service;
+WHERE p.service IN (
+    SELECT service
+    FROM staff
+    GROUP BY service
+    HAVING COUNT(*) > (
+        SELECT AVG(service_staff_count)
+        FROM (
+            SELECT COUNT(*) AS service_staff_count
+            FROM staff
+            GROUP BY service
+        ) AS temp
+    )
+);
+
+
+2️⃣ 𝐋𝐢𝐬𝐭 𝐬𝐭𝐚𝐟𝐟 𝐰𝐡𝐨 𝐰𝐨𝐫𝐤 𝐢𝐧 𝐬𝐞𝐫𝐯𝐢𝐜𝐞𝐬 𝐭𝐡𝐚𝐭 𝐡𝐚𝐝 𝐚𝐧𝐲 𝐰𝐞𝐞𝐤 𝐰𝐢𝐭𝐡 𝐩𝐚𝐭𝐢𝐞𝐧𝐭 𝐬𝐚𝐭𝐢𝐬𝐟𝐚𝐜𝐭𝐢𝐨𝐧 𝐛𝐞𝐥𝐨𝐰 𝟕𝟎
+
+SELECT DISTINCT s.staff_id, s.staff_name, s.service
+FROM staff s
+WHERE s.service IN (
+    SELECT service
+    FROM services_weekly
+    WHERE patient_satisfaction < 70
+);
+
+
+3️⃣ 𝐒𝐡𝐨𝐰 𝐩𝐚𝐭𝐢𝐞𝐧𝐭𝐬 𝐟𝐫𝐨𝐦 𝐬𝐞𝐫𝐯𝐢𝐜𝐞𝐬 𝐰𝐡𝐞𝐫𝐞 𝐭𝐨𝐭𝐚𝐥 𝐚𝐝𝐦𝐢𝐭𝐭𝐞𝐝 𝐩𝐚𝐭𝐢𝐞𝐧𝐭𝐬 𝐞𝐱𝐜𝐞𝐞𝐝 𝟏𝟎𝟎𝟎
+
+SELECT p.patient_id, p.name, p.service
+FROM patients p
+WHERE p.service IN (
+    SELECT service
+    FROM services_weekly
+    GROUP BY service
+    HAVING SUM(patients_admitted) > 1000
+);
+
 
 🎯 𝐃𝐚𝐢𝐥𝐲 𝐂𝐡𝐚𝐥𝐥𝐞𝐧𝐠𝐞
-𝐂𝐫𝐞𝐚𝐭𝐞 𝐚 𝐜𝐨𝐦𝐩𝐫𝐞𝐡𝐞𝐧𝐬𝐢𝐯𝐞 𝐫𝐞𝐩𝐨𝐫𝐭 𝐬𝐡𝐨𝐰𝐢𝐧𝐠 𝐩𝐚𝐭𝐢𝐞𝐧𝐭_𝐢𝐝, 𝐩𝐚𝐭𝐢𝐞𝐧𝐭 𝐧𝐚𝐦𝐞, 𝐚𝐠𝐞, 𝐬𝐞𝐫𝐯𝐢𝐜𝐞, 𝐚𝐧𝐝 𝐭𝐡𝐞 𝐭𝐨𝐭𝐚𝐥 𝐧𝐮𝐦𝐛𝐞𝐫 𝐨𝐟 𝐬𝐭𝐚𝐟𝐟 𝐦𝐞𝐦𝐛𝐞𝐫𝐬 𝐚𝐯𝐚𝐢𝐥𝐚𝐛𝐥𝐞 𝐢𝐧 𝐭𝐡𝐞𝐢𝐫 𝐬𝐞𝐫𝐯𝐢𝐜𝐞.
-𝐎𝐧𝐥𝐲 𝐢𝐧𝐜𝐥𝐮𝐝𝐞 𝐩𝐚𝐭𝐢𝐞𝐧𝐭𝐬 𝐟𝐫𝐨𝐦 𝐬𝐞𝐫𝐯𝐢𝐜𝐞𝐬 𝐭𝐡𝐚𝐭 𝐡𝐚𝐯𝐞 𝐦𝐨𝐫𝐞 𝐭𝐡𝐚𝐧 𝟓 𝐬𝐭𝐚𝐟𝐟 𝐦𝐞𝐦𝐛𝐞𝐫𝐬.
-𝐎𝐫𝐝𝐞𝐫 𝐭𝐡𝐞 𝐫𝐞𝐬𝐮𝐥𝐭𝐬 𝐛𝐲 𝐭𝐨𝐭𝐚𝐥 𝐬𝐭𝐚𝐟𝐟 (𝐃𝐄𝐒𝐂) 𝐚𝐧𝐝 𝐭𝐡𝐞𝐧 𝐛𝐲 𝐩𝐚𝐭𝐢𝐞𝐧𝐭 𝐧𝐚𝐦𝐞 (𝐀𝐒𝐂).
-SELECT 
- p.patient_id,
- p.name AS patient_name,
- p.age,
- p.service,
- COUNT(s.staff_id) AS total_staff
-FROM 
- patients p
-INNER JOIN 
- staff s 
-ON 
- p.service = s.service
-GROUP BY 
- p.patient_id, p.name, p.age, p.service
-HAVING 
- COUNT(s.staff_id) > 5
-ORDER BY 
- total_staff DESC,
- patient_name ASC;
+
+𝐅𝐢𝐧𝐝 𝐚𝐥𝐥 𝐩𝐚𝐭𝐢𝐞𝐧𝐭𝐬 𝐰𝐡𝐨 𝐰𝐞𝐫𝐞 𝐚𝐝𝐦𝐢𝐭𝐭𝐞𝐝 𝐭𝐨 𝐬𝐞𝐫𝐯𝐢𝐜𝐞𝐬 𝐭𝐡𝐚𝐭 𝐡𝐚𝐝 𝐚𝐭 𝐥𝐞𝐚𝐬𝐭 𝐨𝐧𝐞 𝐰𝐞𝐞𝐤 𝐰𝐡𝐞𝐫𝐞 𝐩𝐚𝐭𝐢𝐞𝐧𝐭𝐬 𝐰𝐞𝐫𝐞 𝐫𝐞𝐟𝐮𝐬𝐞𝐝 𝐀𝐍𝐃 𝐭𝐡𝐞 𝐚𝐯𝐞𝐫𝐚𝐠𝐞 𝐩𝐚𝐭𝐢𝐞𝐧𝐭 𝐬𝐚𝐭𝐢𝐬𝐟𝐚𝐜𝐭𝐢𝐨𝐧 𝐟𝐨𝐫 𝐭𝐡𝐚𝐭 𝐬𝐞𝐫𝐯𝐢𝐜𝐞 𝐰𝐚𝐬 𝐛𝐞𝐥𝐨𝐰 𝐭𝐡𝐞 𝐨𝐯𝐞𝐫𝐚𝐥𝐥 𝐡𝐨𝐬𝐩𝐢𝐭𝐚𝐥 𝐚𝐯𝐞𝐫𝐚𝐠𝐞.
+𝐒𝐡𝐨𝐰 𝐩𝐚𝐭𝐢𝐞𝐧𝐭_𝐢𝐝, 𝐧𝐚𝐦𝐞, 𝐬𝐞𝐫𝐯𝐢𝐜𝐞, 𝐚𝐧𝐝 𝐩𝐞𝐫𝐬𝐨𝐧𝐚𝐥 𝐬𝐚𝐭𝐢𝐬𝐟𝐚𝐜𝐭𝐢𝐨𝐧 𝐬𝐜𝐨𝐫𝐞.
+
+SELECT p.patient_id, p.name, p.service, p.satisfaction
+FROM patients p
+WHERE p.service IN (
+    SELECT service
+    FROM services_weekly
+    GROUP BY service
+    HAVING 
+        SUM(CASE WHEN patients_refused > 0 THEN 1 ELSE 0 END) > 0
+        AND AVG(patient_satisfaction) < (
+            SELECT AVG(patient_satisfaction)
+            FROM services_weekly
+        )
+);
+
 
 📊 𝐎𝐮𝐭𝐜𝐨𝐦𝐞
-✔ Multi-table JOIN insights
- ✔ Patient & staff combined analytics
- ✔ Filtered staff counts
- ✔ Real-world actionable report
+✔ Advanced filtering with subqueries
+✔ Logical comparisons using aggregates
+✔ Real-world healthcare data insights
+✔ Stronger SQL problem-solving skills
+
