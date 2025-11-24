@@ -1,0 +1,73 @@
+21 Days of SQL Challenge
+
+This repository contains my daily SQL practice as part of the 21 Days of SQL Challenge by Indian Data Club (Sponsored by DPDzero).
+
+I am solving real-world healthcare dataset problems and uploading both questions and solutions for better learning and revision.
+
+🧩 Day 18 — UNION & Data Combination
+✅ Question 1: Combine patient names and staff names into a single list
+SELECT name FROM patients
+UNION
+SELECT staff_name FROM staff;
+
+✅ Question 2: Create a union of high satisfaction (>90) and low satisfaction (<50) patients
+SELECT name, satisfaction
+FROM patients
+WHERE satisfaction > 90
+
+UNION
+
+SELECT name, satisfaction
+FROM patients
+WHERE satisfaction < 50;
+
+✅ Question 3: List all unique names from both patients and staff
+SELECT name FROM patients
+UNION
+SELECT staff_name FROM staff;
+
+🎯 Daily Challenge
+✅ Question:
+
+Create a comprehensive personnel and patient list showing:
+
+Identifier (patient_id or staff_id)
+
+Full name
+
+Type ('Patient' or 'Staff')
+
+Service
+Only include 'surgery' and 'emergency' services.
+Order by type, service, and name.
+
+✅ Solution:
+SELECT 
+    patient_id AS identifier,
+    name AS full_name,
+    'Patient' AS type,
+    service
+FROM patients
+WHERE service IN ('surgery', 'emergency')
+
+UNION
+
+SELECT 
+    staff_id AS identifier,
+    staff_name AS full_name,
+    'Staff' AS type,
+    service
+FROM staff
+WHERE service IN ('surgery', 'emergency')
+
+ORDER BY type, service, full_name;
+
+🔹 Skills Practiced
+
+UNION and UNION ALL
+
+Filtering combined datasets
+
+Sorting merged results
+
+Real-world SQL problem solving
