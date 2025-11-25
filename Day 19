@@ -1,0 +1,68 @@
+🔥 𝐃𝐀𝐘 𝟏𝟗 𝐎𝐅 𝟐𝟏 𝐃𝐀𝐘𝐒 𝐎𝐅 𝐒𝐐𝐋 — 𝐖𝐈𝐍𝐃𝐎𝐖 𝐅𝐔𝐍𝐂𝐓𝐈𝐎𝐍𝐒 & 𝐑𝐀𝐍𝐊𝐈𝐍𝐆
+
+💡 𝐖𝐇𝐀𝐓 𝐈 𝐋𝐄𝐀𝐑𝐍𝐄𝐃
+✅ ROW_NUMBER() for unique row numbering
+✅ RANK() for ranking with gaps
+✅ DENSE_RANK() for ranking without gaps
+✅ PARTITION BY for grouped analysis
+✅ Using ORDER BY inside window functions
+
+🧩 𝐏𝐑𝐀𝐂𝐓𝐈𝐂𝐄 𝐐𝐔𝐄𝐒𝐓𝐈𝐎𝐍𝐒 & 𝐒𝐎𝐋𝐔𝐓𝐈𝐎𝐍𝐒
+
+1️⃣ 𝐖𝐫𝐢𝐭𝐞 𝐚 𝐪𝐮𝐞𝐫𝐲 𝐭𝐨 𝐚𝐬𝐬𝐢𝐠𝐧 𝐚 𝐮𝐧𝐢𝐪𝐮𝐞 𝐫𝐨𝐰 𝐧𝐮𝐦𝐛𝐞𝐫 𝐭𝐨 𝐞𝐚𝐜𝐡 𝐩𝐚𝐭𝐢𝐞𝐧𝐭 𝐛𝐚𝐬𝐞𝐝 𝐨𝐧 𝐭𝐡𝐞𝐢𝐫 𝐧𝐚𝐦𝐞.
+SELECT 
+  name,
+  ROW_NUMBER() OVER (ORDER BY name) AS row_no
+FROM patients;
+
+
+2️⃣ 𝐖𝐫𝐢𝐭𝐞 𝐚 𝐪𝐮𝐞𝐫𝐲 𝐭𝐨 𝐫𝐚𝐧𝐤 𝐩𝐚𝐭𝐢𝐞𝐧𝐭𝐬 𝐛𝐚𝐬𝐞𝐝 𝐨𝐧 𝐭𝐡𝐞𝐢𝐫 𝐬𝐚𝐭𝐢𝐬𝐟𝐚𝐜𝐭𝐢𝐨𝐧 𝐬𝐜𝐨𝐫𝐞 𝐟𝐫𝐨𝐦 𝐡𝐢𝐠𝐡𝐞𝐬𝐭 𝐭𝐨 𝐥𝐨𝐰𝐞𝐬𝐭.
+SELECT 
+  name,
+  satisfaction,
+  RANK() OVER (ORDER BY satisfaction DESC) AS rank_no
+FROM patients;
+
+
+3️⃣ 𝐖𝐫𝐢𝐭𝐞 𝐚 𝐪𝐮𝐞𝐫𝐲 𝐭𝐨 𝐫𝐚𝐧𝐤 𝐩𝐚𝐭𝐢𝐞𝐧𝐭𝐬 𝐬𝐞𝐩𝐚𝐫𝐚𝐭𝐞𝐥𝐲 𝐰𝐢𝐭𝐡𝐢𝐧 𝐞𝐚𝐜𝐡 𝐬𝐞𝐫𝐯𝐢𝐜𝐞 𝐛𝐚𝐬𝐞𝐝 𝐨𝐧 𝐬𝐚𝐭𝐢𝐬𝐟𝐚𝐜𝐭𝐢𝐨𝐧.
+SELECT 
+  name,
+  services,
+  satisfaction,
+  RANK() OVER (
+      PARTITION BY services
+      ORDER BY satisfaction DESC
+  ) AS service_rank
+FROM patients;
+
+
+🎯 𝐃𝐀𝐈𝐋𝐘 𝐂𝐇𝐀𝐋𝐋𝐄𝐍𝐆𝐄
+
+𝐖𝐫𝐢𝐭𝐞 𝐚 𝐪𝐮𝐞𝐫𝐲 𝐭𝐨 𝐝𝐢𝐬𝐩𝐥𝐚𝐲 𝐭𝐡𝐞 𝐭𝐨𝐩 𝟑 𝐡𝐢𝐠𝐡𝐞𝐬𝐭-𝐬𝐚𝐭𝐢𝐬𝐟𝐢𝐞𝐝 𝐩𝐚𝐭𝐢𝐞𝐧𝐭𝐬 𝐰𝐢𝐭𝐡𝐢𝐧 𝐞𝐚𝐜𝐡 𝐬𝐞𝐫𝐯𝐢𝐜𝐞 𝐮𝐬𝐢𝐧𝐠 𝐰𝐢𝐧𝐝𝐨𝐰 𝐟𝐮𝐧𝐜𝐭𝐢𝐨𝐧𝐬.
+SELECT 
+  services,
+  name,
+  satisfaction,
+  rank_no
+FROM (
+  SELECT 
+      services,
+      name,
+      satisfaction,
+      RANK() OVER (
+          PARTITION BY services
+          ORDER BY satisfaction DESC
+      ) AS rank_no
+  FROM patients
+) ranked_data
+WHERE rank_no <= 3;
+
+
+📊 𝐎𝐔𝐓𝐂𝐎𝐌𝐄
+✔ Strong understanding of window functions
+✔ Improved analytical query writing
+✔ Better real-world SQL reporting skills
+✔ Higher confidence working with complex SQL
+
+
+#SQLWithIDC #Day19 #21DaysOfSQL #IndianDataClub #DPDzero #SQL #DataAnalytics #WindowFunctions #Ranking #LearningJourney #Upskilling
