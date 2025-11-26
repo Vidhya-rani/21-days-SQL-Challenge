@@ -1,0 +1,97 @@
+💡 𝐖𝐡𝐚𝐭 𝐈 𝐋𝐞𝐚𝐫𝐧𝐞𝐝
+
+🔹 Running totals (cumulative calculations)
+🔹 Moving averages for trend smoothing
+🔹 Week-by-week performance tracking
+🔹 Comparing current values with service averages
+🔹 Multi-metric healthcare analytics
+
+🧩 𝐏𝐫𝐚𝐜𝐭𝐢𝐜𝐞 𝐐𝐮𝐞𝐬𝐭𝐢𝐨𝐧𝐬 & 𝐒𝐨𝐥𝐮𝐭𝐢𝐨𝐧𝐬
+1️⃣ Calculate running total of patients admitted by week for each service
+SELECT 
+    h1.service,
+    h1.week,
+    h1.patients_request AS patients_admitted,
+    (
+        SELECT SUM(h2.patients_request)
+        FROM services_weekly h2
+        WHERE h2.service = h1.service
+          AND h2.week <= h1.week
+    ) AS running_total_admitted
+FROM services_weekly h1;
+
+2️⃣ Find the moving average of patient satisfaction over 4-week periods
+SELECT 
+    h1.service,
+    h1.week,
+    h1.patient_satisfaction,
+    (
+        SELECT AVG(h2.patient_satisfaction)
+        FROM services_weekly h2
+        WHERE h2.service = h1.service
+          AND h2.week BETWEEN h1.week - 3 AND h1.week
+    ) AS moving_avg_4_weeks
+FROM services_weekly h1;
+
+3️⃣ Show cumulative patient refusals by week across all services
+SELECT 
+    h1.week,
+    h1.patients_refused,
+    (
+        SELECT SUM(h2.patients_refused)
+        FROM services_weekly h2
+        WHERE h2.week <= h1.week
+    ) AS cumulative_refusals
+FROM services_weekly h1;
+
+🎯 𝐃𝐚𝐢𝐥𝐲 𝐂𝐡𝐚𝐥𝐥𝐞𝐧𝐠𝐞
+
+Created a healthcare trend analysis showing:
+
+✅ Week number
+✅ Patients admitted
+✅ Running total (cumulative)
+✅ 3-week moving average of satisfaction
+✅ Difference from service average
+✅ Filtered weeks 10–20
+
+✅ Solution:
+SELECT 
+    h1.service,
+    h1.week,
+    h1.patients_request AS patients_admitted,
+    (
+        SELECT SUM(h2.patients_request)
+        FROM services_weekly h2
+        WHERE h2.service = h1.service
+          AND h2.week <= h1.week
+    ) AS running_total_admitted,
+    (
+        SELECT AVG(h2.patient_satisfaction)
+        FROM services_weekly h2
+        WHERE h2.service = h1.service
+          AND h2.week BETWEEN h1.week - 2 AND h1.week
+    ) AS moving_avg_3_weeks,
+    (
+        SELECT AVG(h2.patients_request)
+        FROM services_weekly h2
+        WHERE h2.service = h1.service
+    ) AS service_avg_admitted,
+    (
+        h1.patients_request -
+        (
+            SELECT AVG(h2.patients_request)
+            FROM services_weekly h2
+            WHERE h2.service = h1.service
+        )
+    ) AS diff_from_service_avg
+FROM services_weekly h1
+WHERE h1.week BETWEEN 10 AND 20;
+
+📊 𝐎𝐮𝐭𝐜𝐨𝐦𝐞
+
+✔ Strong understanding of trend-based SQL
+✔ Advanced analytics with subqueries
+✔ Better healthcare data insights
+✔ Improved problem-solving skills
+
